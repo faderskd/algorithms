@@ -151,39 +151,89 @@ def mergesort(head):
     return sorted_merge(new_left_head, new_right_head)
 
 
-def reverse_in_group(head, size):
-    if not head or size < 1:
-        raise ValueError('Bad input')
-
-    counter = 0
-    new_head = left = head
+def find_and_remove_loop(head):
+    nodes = set()
     prev = None
-    right = head
-    while right:
-        if counter != 0 and counter % size == 0:
-            counter = 0
-            if not new_head:
-                new_head = right
-            left.next = right.next
+    head_copy = head
+    while head:
+        if head in nodes:
+            prev.next = None
+            break
+        nodes.add(head)
+        prev = head
+        head = head.next
+    return head_copy
 
-        next_head = right.next
-        right.next = prev
-        prev = right
-        right = next_head
+
+def detect_and_remove_loop(head):
+    slow = fast = head
+    while fast.next and slow != fast.next:
+        fast = fast.next
+        if fast.next:
+            slow = slow.next
+            fast = fast.next
+    if slow == fast.next:
+        remove_loop(head, slow)
+    return head
+
+
+def remove_loop(head, loop_node):
+    left = head
+    while True:
+        right = loop_node
+        while left != right.next and right.next != loop_node:
+            right = right.next
+        if left == right.next:
+            right.next = None
+            return
+        left = left.next
+
+
+def rotate_right(head, size):
+    if not (head and head.next):
+        return head
+
+    first = head
+    prev = None
+    for i in range(size):
+        while head.next:
+            prev = head
+            head = head.next
+        head.next = first
+        prev.next = None
+        first = head
+    return head
+
+
+def rotate_left(head, size):
+    if size < 1:
+        return head
+
+    counter = 1
+    tmp_head = head
+    while counter < size and tmp_head:
+        tmp_head = tmp_head.next
+        counter += 1
+
+    if not (tmp_head and tmp_head.next):
+        return head
+
+    new_head = tmp_head.next
+    tmp_head.next = None
+    tmp_head = new_head
+    while tmp_head.next:
+        tmp_head = tmp_head.next
+    tmp_head.next = head
     return new_head
 
-    0 1 2 3 4
 
-
-n8 = Node(2)
-n7 = Node(2, n8)
-n6 = Node(3, n7)
+n8 = Node(8)
+n7 = Node(7, n8)
+n6 = Node(6, n7)
 n5 = Node(5, n6)
-n4 = Node(2, n5)
-n3 = Node(1, n4)
-n2 = Node(3, n3)
-n1 = Node(6, n2)
+n4 = Node(4, n5)
+n3 = Node(3, n4)
+n2 = Node(2, n3)
+n1 = Node(1, n2)
 
-
-print_list(n1)
-print_list(mergesort(n1))
+print_list(rotate_left(n1, 2))
