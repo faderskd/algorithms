@@ -167,13 +167,11 @@ def find_and_remove_loop(head):
 
 def detect_and_remove_loop(head):
     slow = fast = head
-    while fast.next and slow != fast.next:
-        fast = fast.next
-        if fast.next:
-            slow = slow.next
-            fast = fast.next
-    if slow == fast.next:
-        remove_loop(head, slow)
+    while fast and fast.next:
+        fast = fast.next.net
+        slow = slow.next
+        if fast == slow:
+            remove_loop(head, slow)
     return head
 
 
@@ -235,5 +233,6 @@ n4 = Node(4, n5)
 n3 = Node(3, n4)
 n2 = Node(2, n3)
 n1 = Node(1, n2)
+n8.next = n1
 
-print_list(rotate_left(n1, 2))
+print_list(find_and_remove_loop(n1))
