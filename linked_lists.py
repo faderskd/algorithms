@@ -150,7 +150,7 @@ def mergesort(head):
     new_right_head = mergesort(right_head)
     return sorted_merge(new_left_head, new_right_head)
 
-
+# O(n)
 def find_and_remove_loop(head):
     nodes = set()
     prev = None
@@ -165,6 +165,7 @@ def find_and_remove_loop(head):
     return head_copy
 
 
+# O(n^2)
 def detect_and_remove_loop(head):
     slow = fast = head
     while fast and fast.next:
@@ -174,7 +175,7 @@ def detect_and_remove_loop(head):
             remove_loop(head, slow)
     return head
 
-
+# O(n^2)
 def remove_loop(head, loop_node):
     left = head
     while True:
@@ -186,7 +187,7 @@ def remove_loop(head, loop_node):
             return
         left = left.next
 
-
+# O(n^2)
 def rotate_right(head, size):
     if not (head and head.next):
         return head

@@ -90,10 +90,9 @@ def optimized_find_closes_elements(li, x, k):
     if li[index]:
         index -= 1
 
-# A = [1, 3, 5, 5, 6, 6, 6, 7]
-# print(find_closest_elements(A, 8, 2))
 
 
+# O(n^2)
 def find_zero_triplets(li):
     li.sort()
     for i in range(len(li) - 2):
@@ -111,6 +110,7 @@ def find_zero_triplets(li):
                 r -= 1
 
 
+# O(n*log(n))
 def sort_in_wave_form(li):
     li.sort(reverse=True)
     for i in range(1, len(li) - 1, 2):
@@ -119,6 +119,7 @@ def sort_in_wave_form(li):
     return li
 
 
+# O(n)
 def sort_in_wave_form_linear(li):
     if len(li) < 3:
         return li
@@ -131,10 +132,10 @@ def sort_in_wave_form_linear(li):
             li[i + 1], li[i] = li[i], li[i + 1]
     if li[-1] < li[-2]:
         li[-1], li[-2] = li[-2], li[-1]
-    print(li)
     return li
 
 
+# O(n)
 def closes_pair_sum(li, x):
     li.sort()
     closest_pair = li[0], li[1]
@@ -150,8 +151,91 @@ def closes_pair_sum(li, x):
             l += 1
         else:
             break
-    print(closest_pair)
     return closest_pair
 
 
-closes_pair_sum([-5, -2, -2, 0, 4, 6, 12, 13, 14], 5)
+# O(n)
+def closest_pair_from_two_arrays(li1, li2, x):
+    merged = []
+    fixture = []
+    i = j = 0
+    while i < len(li1) and j < len(li2):
+        if li1[i] < li2[j]:
+            merged.append(li1[i])
+            fixture.append(1)
+            i += 1
+        else:
+            merged.append(li2[j])
+            fixture.append(2)
+            j += 1
+
+    while i < len(li1):
+        merged.append(li1[i])
+        fixture.append(1)
+        i += 1
+
+    while j < len(li2):
+        merged.append(li2[j])
+        fixture.append(2)
+        j += 1
+
+
+    i = 0
+    j = len(merged) - 1
+    min_diff = abs(merged[i] + merged[j] - x)
+    min_i, min_j = i, j
+    while i < j:
+        diff = abs(merged[i] + merged[j] - x)
+        if fixture[i] != fixture[j] and diff < min_diff:
+            min_diff = diff
+            min_i = i
+            min_j = j
+
+        if merged[i] + merged[j] - x > 0:
+            j -= 1
+        else:
+            i += 1
+
+    return merged[min_i], merged[min_j]
+
+
+# O(n)
+def median_of_two_sorted_arrays(A, B):
+    counter = 0
+    length = len(A) + len(B)
+    i = j = 0
+    searched_index = length // 2
+    curr = prev = None
+    while i < len(A) and j < len(B) and counter <= searched_index:
+        if A[i] < B[j]:
+            prev = curr
+            curr = A[i]
+            i += 1
+        else:
+            prev = curr
+            curr = B[j]
+            j += 1
+        counter += 1
+
+    while i < len(A) and counter <= searched_index:
+        prev = curr
+        curr = A[i]
+        counter += 1
+        i += 1
+
+    while j < len(B) and counter <= searched_index:
+        prev = curr
+        curr = B[j]
+        counter += 1
+        j += 1
+
+    if length % 2 == 0:
+        return (curr + prev) / 2
+    else:
+        return curr
+
+A = [4]
+B = [1]
+print(sorted(A + B))
+print(median_of_two_sorted_arrays(A, B))
+

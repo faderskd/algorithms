@@ -39,6 +39,7 @@ def tmp_table_k_largest(li, k):
 # O(k + (n - k)*log(k))
 from min_heap import build_heap, heapify_iterative
 
+
 def heap_k_largest(li, k):
     heap = li[0: k]
     build_heap(heap)
@@ -49,4 +50,23 @@ def heap_k_largest(li, k):
     return heap
 
 
-print(heap_k_largest([6, 1, 0, -1, 5, 3, 7, 0, 1, 9, 8], 3))
+def quick_k_smallest(li, start, end, k):
+    if start > end:
+        return
+    pivot = li[end]
+    j = start
+    for i in range(start, end):
+        if li[i] <= pivot:
+            li[i], li[j] = li[j], li[i]
+            j += 1
+    li[j], li[end] = li[end], li[j]
+    if j == k - 1:
+        return pivot
+    if j > k - 1:
+        return quick_k_smallest(li, start, j - 1, k)
+    return quick_k_smallest(li, j + 1, end, k)
+
+
+A = [12, 3, 5, 7, 4, 19, 19, 26]
+print(sorted(A[:]))
+print(quick_k_smallest(A, 0, len(A)-1, 8))
